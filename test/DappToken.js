@@ -1,7 +1,24 @@
 var DappToken = artifacts.require("./DappToken.sol");
 
 contract('DappToken', function(accounts) {
-  it('sets the total supply upon deployment', function() {
+  var tokenInstance;
+
+  it('initializes the contract with the correct values', function() {
+    return DappToken.deployed().then(function(instance) {
+      tokenInstance = instance;
+      return tokenInstance.name();
+    }).then(function(name) {
+      assert.equal(name, 'DApp Token', 'has the correct name');
+      return tokenInstance.symbol();
+    }).then(function(symbol) {
+      assert.equal(symbol, 'DAPP', 'has the correct symbol');
+      return tokenInstance.standard();
+    }).then(function(standard) {
+      assert.equal(standard, 'DApp Token v1.0', 'has the correct standard');
+    });
+  })
+
+  it('allocates the initial supply upon deployment', function() {
     return DappToken.deployed().then(function(instance) {
       tokenInstance = instance;
       return tokenInstance.totalSupply();
