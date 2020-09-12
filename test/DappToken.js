@@ -29,6 +29,25 @@ contract('DappToken', function(accounts) {
       assert.equal(adminBalance.toNumber(), 1000000, 'it allocates the inital supply to the admin account')
     })
   });
+
+  it('transfers token ownership', function() {
+    return DappToken.deployed().then(function(instance) {
+      tokenInstance = instance;
+
+      return tokenInstance.transfer.call(accounts[1], 9999999999999999999999);
+    }).then(assert.fail).catch(function(error) {
+      assert(error.message,indexOf('revert') >= 0, 'error message must contain revert');
+      return tokenInstance transfer.call(accounts[1], 250000, { from: accounts[0] });
+      return tokenInstance.transfer(accounts[1], 250000, { from: accounts[0] });
+    }).then(function(reciept) {
+      return tokenInstance.balanceOf(accounts[1]);
+    }).then(function(balance) {
+      assert.equal(balance.toNumber(), 250000, 'adds the amount to the receiving account');
+      return tokenInstance.balanceOf(accounts[0]);
+    }).then(function(balance) {
+      assert.equal(balance.toNumber(), 750000, 'deducts the amount from the sending account');
+    })
+  })
 })
 
 
