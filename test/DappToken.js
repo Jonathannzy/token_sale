@@ -48,8 +48,16 @@ contract('DappToken', function(accounts) {
       return tokenInstance.balanceOf(accounts[0]);
     }).then(function(balance) {
       assert.equal(balance.toNumber(), 750000, 'deducts the amount from the sending account');
-    })
-  })
-})
+    });
+  });
+
+  it('approves tokens for delegated tansfer', function () {
+    return DappToken.deployed().then(function(instance) {
+      tokenInstance = instance;
+      return tokenInstance.approve.call(accounts[1], 100);
+    }).then(function(success) {
+      assert.equal(success, true, 'it returns true');
+  });
+});
 
 
